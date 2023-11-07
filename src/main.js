@@ -28,6 +28,7 @@ import './assets/css/markdown-highlight.css'
 import './assets/css/font-awesome.min.css'
 import 'mavon-editor/dist/css/index.css'
 import common from './utils/common'
+import constant from './utils/constant'
 
 //关闭Vue的生产提示
 Vue.config.productionTip = false
@@ -38,6 +39,7 @@ Vue.use(mavonEditor)
 
 
 Vue.prototype.$common = common
+Vue.prototype.$constant = constant
 Vue.filter('dateFormat', function(originVal){
   // 先把传参毫秒转化为new Date()
   const dt = new Date(originVal * 1000)

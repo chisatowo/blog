@@ -6,12 +6,10 @@
                 :class="[{ hoverEnter: hoverEnter && !toolbar.enter }, { enter: toolbar.enter }, { myCenter: !$common.mobile() }, { myBetween: $common.mobile() || mobile }]"
                 class="toolbar-content ">
 
-
                 <!-- 名称 -->
                 <div class="toolbar-title" style="margin-right:15px;">
                     <h2 @click="$router.push({ path: '/' })">Cliqin</h2>
                 </div>
-
 
                 <!-- 手机导航按钮 -->
                 <div v-if="$common.mobile() || mobile" class="toolbar-mobile-menu " @click="toolbarDrawer = !toolbarDrawer"
@@ -19,42 +17,19 @@
                     <i class="el-icon-s-operation"></i>
                 </div>
 
+                <!-- 电脑导航栏 -->
                 <div v-else>
-                    <!-- 导航栏 -->
                     <ul class="scroll-menu">
-                        <li @click="smallMenu({path: '/'})">
+                        <li @click="$router.push({ path: '/' })">
                             <div class="my-menu">
                                 🏡 <span>Home</span>
                             </div>
                         </li>
-                        <li>
+                        <li v-for="(menu, index) in $store.getters.navigationBar"
+                            @click="$router.push({ path: '/sort', query: { sortId: menu.id, labelId: menu.labels[0].id } })"
+                            :key="index">
                             <div class="my-menu">
-                                📒 <span>导航2</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="my-menu">
-                                🌏 <span>导航3</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="my-menu">
-                                🧰 <span>导航4</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="my-menu">
-                                💬 <span>导航5</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="my-menu">
-                                🎺 <span>导航6</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="my-menu">
-                                📪 <span>导航7</span>
+                                📒 <span>{{ menu.sortName }}</span>
                             </div>
                         </li>
                         <li @click="$router.push({ path: 'about' })">
@@ -70,8 +45,6 @@
         <div id="main-container">
             <router-view></router-view>
         </div>
-        <!-- 回到顶部按钮 -->
-        <!-- <div href="#" class="cd-top" v-if="!$common.mobile()" @click="toTop()"></div> -->
         <!-- 底部页面主题设置 -->
         <div class="toolButton">
             <div class="backTop" v-if="toolButton" @click="toTop()">
@@ -118,104 +91,28 @@
         <canvas v-if="mouseAnimation" id="mousedown" style="position:fixed;left:0;top:0;pointer-events:none;z-index: 1000">
         </canvas>
 
-        <el-drawer 
-        :visible.sync="toolbarDrawer" 
-        :show-close="false" 
-        size="65%" 
-        custom-class="toolbarDrawer" 
-        title="欢迎光临" 
-        direction="ltr">
+        <!-- 手机导航栏 -->
+        <el-drawer :visible.sync="toolbarDrawer" :show-close="false" size="65%" custom-class="toolbarDrawer" title="欢迎光临"
+            direction="ltr">
             <div>
                 <ul class="small-menu">
-                    <li @click="smallMenu({path: '/'})">
+                    <li @click="smallMenu({ path: '/' })">
                         <div>
                             🏡 <span>首页</span>
                         </div>
                     </li>
-
-                    <!--          <li v-for="(menu, index) in $store.getters.navigationBar"-->
-                    <!--              @click="smallMenu({path: '/sort', query: {sortId: menu.id, labelId: menu.labels[0].id}})"-->
-                    <!--              :key="index">-->
-                    <!--            <div>-->
-                    <!--              📒 <span>{{ menu.sortName }}</span>-->
-                    <!--            </div>-->
-                    <!--          </li>-->
-
-                    <!-- 爱情买卖 -->
-                    <li>
+                    <li v-for="(menu, index) in $store.getters.navigationBar"
+                        @click="smallMenu({ path: '/sort', query: { sortId: menu.id, labelId: menu.labels[0].id } })"
+                        :key="index">
                         <div>
-                            💋 <span>爱情买卖</span>
+                            📒 <span>{{ menu.sortName }}</span>
                         </div>
                     </li>
-
-                    <!-- 旅拍 -->
-                    <li>
-                        <div>
-                            🌏 <span>旅拍</span>
-                        </div>
-                    </li>
-
-                    <!-- 百宝箱 -->
-                    <li>
-                        <div>
-                            🧰 <span>百宝箱</span>
-                        </div>
-                    </li>
-
-                    <!-- 聊天室 -->
-                    <li>
-                        <div>
-                            💬 <span>非礼勿言</span>
-                        </div>
-                    </li>
-                    <!-- 音乐 -->
-                    <li>
-                        <div>
-                            🎺 <span>曲乐</span>
-                        </div>
-                    </li>
-                    <!-- 留言 -->
-                    <li>
-                        <div>
-                            📪 <span>留言</span>
-                        </div>
-                    </li>
-                    <!-- 友人帐 -->
-                    <li>
-                        <div>
-                            💃 <span>友人帐</span>
-                        </div>
-                    </li>
-
-                    <!-- 关于 -->
                     <li>
                         <div>
                             🐟 <span>关于</span>
                         </div>
                     </li>
-
-                    <!-- <template v-if="$common.isEmpty($store.state.currentUser)">
-                        <li @click="smallMenu({ path: '/user' })">
-                            <div>
-                                <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                <span>&nbsp;登录</span>
-                            </div>
-                        </li>
-                    </template>
-                    <template v-else>
-                        <li @click="smallMenu({ path: '/user' })">
-                            <div>
-                                <i class="fa fa-user-circle" aria-hidden="true"></i>
-                                <span>&nbsp;个人中心</span>
-                            </div>
-                        </li>
-                        <li @click="smallMenuLogout()">
-                            <div>
-                                <i class="fa fa-sign-out" aria-hidden="true"></i>
-                                <span>&nbsp;退出</span>
-                            </div>
-                        </li>
-                    </template> -->
                 </ul>
             </div>
         </el-drawer>
@@ -224,9 +121,10 @@
   
 <!-- 我已经在main.js引入一次jquery了,为啥还要在这引入一次呢? -->
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 <script>
 //import mousedown from '../utils/mousedown';
-
+import axios from "axios";
 export default {
     data() {
         return {
@@ -281,7 +179,25 @@ export default {
             this.$store.commit("changeToolbarStatus", toolbarStatus);
         },
     },
+    created() {
+        this.getSortInfo();
+    },
     methods: {
+        getSortInfo() {
+            axios({
+				method: 'post',
+				url: this.$constant.baseURL+ "/sort/",
+			}).then(res => {
+                if (!this.$common.isEmpty(res.data)) {
+                    this.$store.commit("loadSortInfo", res.data);
+                }
+			}).catch((error) => {
+				this.$message({
+                    message: error.message,
+                    type: "error"
+                });
+			})
+        },
         smallMenu(data) {
             this.$router.push(data)
             this.toolbarDrawer = false;

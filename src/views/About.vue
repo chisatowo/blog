@@ -3,7 +3,7 @@
 		<br>
 		<br>
 		<br>
-		<h1>这是About页面</h1>
+		<h1>啥都没现在</h1>
 	</div>
 </template>
 

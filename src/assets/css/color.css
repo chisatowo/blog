@@ -21,7 +21,7 @@
     /* 主题背景 */
     --themeBackground: orange;
     /* 主题悬停背景 */
-    --gradualRed: linear-gradient(to right, #ff4b2b, #ff416c);
+    --gradualRed: linear-gradient(to right, #460096, #ff416c);
 
     /* 导航栏字体 */
     --toolbarFont: #333333;

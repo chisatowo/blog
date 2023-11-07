@@ -7,46 +7,44 @@ Vue.use(Vuex)
 
 //准备actions——用于响应组件中的动作
 const actions = {
-	/* jia(context,value){
-		console.log('actions中的jia被调用了')
-		context.commit('JIA',value)
-	},
-	jian(context,value){
-		console.log('actions中的jian被调用了')
-		context.commit('JIAN',value)
-	}, */
-	jiaOdd(context, value) {
-		console.log('actions中的jiaOdd被调用了')
-		if (context.state.sum % 2) {
-			context.commit('JIA', value)
+
+}
+
+const getters = {
+	navigationBar: state => {
+		if (state.sortInfo !== null && state.sortInfo.length !== 0) {
+			return state.sortInfo;
+		} else {
+			return [];
 		}
-	},
-	jiaWait(context, value) {
-		console.log('actions中的jiaWait被调用了')
-		setTimeout(() => {
-			context.commit('JIA', value)
-		}, 500)
 	}
 }
+
 //准备mutations——用于操作数据（state）
 const mutations = {
-	JIA(state, value) {
-		console.log('mutations中的JIA被调用了')
-		state.sum += value
-	},
-	JIAN(state, value) {
-		console.log('mutations中的JIAN被调用了')
-		state.sum -= value
-	},
 	changeToolbarStatus(state, toolbarState) {
 		state.toolbar = toolbarState;
 		localStorage.setItem("toolbar", JSON.stringify(toolbarState));
 	},
+	//保存 分类 的信息
+	loadSortInfo(state, sortInfo) {
+		if (sortInfo !== null && sortInfo.length !== 0) {
+			//state.sortInfo = sortInfo.sort((s1, s2) => s1.priority - s2.priority);
+			//localStorage.setItem("sortInfo", JSON.stringify(sortInfo.sort((s1, s2) => s1.priority - s2.priority)));
+			state.sortInfo = sortInfo
+			localStorage.setItem("sortInfo", JSON.stringify(sortInfo));
+		}
+	},
+	loadTotal(state, length) {
+		state.total = length
+	}
 }
 //准备state——用于存储数据
 const state = {
-	sum: 0, //当前的和
-	toolbar: JSON.parse(localStorage.getItem("toolbar") || '{"visible": false, "enter": true}')
+	toolbar: JSON.parse(localStorage.getItem("toolbar") || '{"visible": false, "enter": true}'),
+	sortInfo: JSON.parse(localStorage.getItem("sortInfo") || '[]'),
+	total: 0
+	//sortInfo: JSON.parse('[]'),
 }
 
 //创建并暴露store
@@ -54,4 +52,7 @@ export default new Vuex.Store({
 	actions,
 	mutations,
 	state,
+	getters,
+
+
 })

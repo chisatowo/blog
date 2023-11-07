@@ -1,9 +1,9 @@
 export default {
-  baseURL: "http://localhost:8081",
+  //baseURL: "http://localhost:8003",
   imBaseURL: "http://localhost:81",
   webURL: "http://localhost",
 
-  // baseURL: "https://poetize.cn/api",
+  baseURL: "http://fastapi.hejianhui.asia:8889",
   // imBaseURL: "https://poetize.cn/im",
   // webURL: "https://poetize.cn",
 

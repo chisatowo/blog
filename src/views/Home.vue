@@ -30,14 +30,14 @@
 		<div class="page-container-wrap">
 			<div class="page-container">
 				<div class="aside-content">
-					<MyAside />
+					<MyAside @selectArticle="selectArticle" />
 				</div>
 				<div class="recent-posts">
 					<div class="announcement background-opacity">
 						<i class="fa fa-volume-up" aria-hidden="true"></i>
 						<div>
 							<div>
-								notice
+								哈哈哈哈哈哈哈哈哈哈嗝
 							</div>
 						</div>
 					</div>
@@ -73,17 +73,23 @@ import articleList from "./articleList.vue"
 import myFooter from "./common/myFooter.vue"
 import axios from "axios";
 
-
-
 export default {
 	data() {
 		return {
+			pagination: {
+				current: 1,
+				size: 10,
+				total: 0,
+				searchKey: "",
+				sortId: 0,
+				labelId: 0,
+				articleSearch: ""
+			},
 			articles: [],
 			fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
 			url: 'https://images.unsplash.com/photo-1695018128519-bced2bac1b71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA==&auto=format&fit=crop&w=2070&q=80'
 		};
 	},
-
 	components: {
 		MyAside,
 		printer,
@@ -91,35 +97,49 @@ export default {
 		myFooter
 	},
 	created() {
-		this.getArticles()
+		this.getArticles();
 	},
 	methods: {
 		//获取文章
 		async getArticles() {
 			await axios({
-				method: 'get',
-				// url: "http://119.91.233.250:8888/article/list",
-				url: "http://fastapi.hejianhui.asia:8889/blog/",
-				//注意axios的data是放到请求体Body中的,而不是Form表单中,后端接收要用Body格式
-				// data: {
-				// 	keyword: "*"
-				// },
-				// params: {
-				// 	"keyword": "params"
-				// },
-			}).then((res) => {
+				method: 'post',
+				// url: "http://fastapi.hejianhui.asia:8889/blog/list",
+				url: this.$constant.baseURL + "/blog/list",
+				data: this.pagination,
+			}).then(res => {
+				//仅在第一次进入此判断执行
+				if (this.articles.length == 0) {
+					this.$store.commit("loadTotal", res.data.length);
+				}
 				this.articles = res.data
-				this.$message({
-					message: '文章获取成功',
-					type: "success",
-				});
-			}, () => {
+			}).catch(() => {
 				this.$message({
 					message: '文章获取失败',
 					type: "error",
 				});
+			})
+		},
+		async selectArticle(articleSearch = "", sortId = 0) {
+			this.pagination = {
+				current: 1,
+				size: 10,
+				total: 0,
+				searchKey: "",
+				sortId,
+				labelId: 0,
+				articleSearch
+			}
+			this.articles = [];
+			await this.getArticles();
+			this.$nextTick(() => {
+				document.querySelector('.recent-posts').scrollIntoView({
+					behavior: "smooth",
+					block: "start",
+					inline: "nearest"
+				});
 			});
-		}
+		},
 	}
 }
 </script>

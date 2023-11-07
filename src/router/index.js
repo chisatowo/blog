@@ -19,6 +19,11 @@ export default new VueRouter({
 					component: () => import('../views/Home'),
 				},
 				{
+					path: "/sort",
+					name: "sort",
+					component: () => import('../views/sort')
+				},
+				{
 					path: "/article",
 					name: "article",
 					component: () => import('../views/article')

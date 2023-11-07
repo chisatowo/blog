@@ -3,20 +3,20 @@
     <!-- 网站信息 -->
     <div class="card-content1 shadow-box background-opacity">
       <el-avatar style="margin-top: 20px" class="user-avatar" :size="120"
-        src="https://119.91.233.250:12345/down/YBai1d2HlglM.png"></el-avatar>
+        src="https://119.91.233.250:12345/down/OVD9RI9yFj5O.png"></el-avatar>
       <div class="web-name">Cliqin</div>
       <div class="web-info">
         <div class="blog-info-box">
-          <span>年龄</span>
-          <span class="blog-info-num">20 </span>
+          <span>文章</span>
+          <span class="blog-info-num">{{$store.state.total}}</span>
         </div>
         <div class="blog-info-box">
-          <span>性别</span>
-          <span class="blog-info-num">男</span>
+          <span>分类</span>
+          <span class="blog-info-num">{{sortInfo.length}}</span>
         </div>
         <div class="blog-info-box">
           <span>访问量</span>
-          <span class="blog-info-num">未知</span>
+          <span class="blog-info-num">π</span>
         </div>
       </div>
       <a class="collection-btn">
@@ -31,8 +31,8 @@
         搜索
       </div>
       <div style="display: flex">
-        <input class="ais-SearchBox-input" type="text" placeholder="搜索文章" maxlength="32">
-        <div class="ais-SearchBox-submit" @click="selectArticle()">
+        <input class="ais-SearchBox-input" v-model="articleSearch" type="text" placeholder="搜索文章" maxlength="32">
+        <div class="ais-SearchBox-submit" @click="selectArticle('search')">
           <svg style="margin-top: 3.5px;margin-left: 18px" viewBox="0 0 1024 1024" width="20" height="20">
             <path
               d="M51.2 508.8c0 256.8 208 464.8 464.8 464.8s464.8-208 464.8-464.8-208-464.8-464.8-464.8-464.8 208-464.8 464.8z"
@@ -45,20 +45,6 @@
       </div>
     </div>
 
-
-
-    <!-- 速览 -->
-    <!-- <div class="shadow-box-mini background-opacity wow"
-      style="background: orange; position: relative;padding: 20px 25px 40px;border-radius: 10px;animation: hideToShow 1s ease-in-out;margin-top: 40px;cursor: pointer;color: yellow">
-      <div>速览</div>
-      <div class="sort-name">
-        瓦罗兰特
-      </div>
-      <div style="font-weight: bold;margin-top: 15px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden">
-        记录精彩游戏时刻
-      </div>
-    </div> -->
-
     <!-- 分类sorts -->
     <div v-if="!$common.isEmpty(sortInfo)" class="shadow-box background-opacity wow"
       style="margin-top: 40px;padding: 25px 25px 5px;border-radius: 10px;animation: hideToShow 1s ease-in-out">
@@ -67,32 +53,15 @@
         <span>分类</span>
       </div>
 
-      <div v-for="(sort, index) in sortInfo" :key="index" class="post-sort">
+      <div v-for="(sort, index) in sortInfo" :key="index" class="post-sort" @click="selectArticle('sort', sort.id)">
         <div>
           <span>{{ sort.sortName }}</span>
         </div>
       </div>
-
-    </div>
-
-    <!-- 标签labels -->
-    <div v-if="!$common.isEmpty(sortInfo)" class="shadow-box background-opacity wow"
-      style="margin-top: 40px;padding: 25px 25px 5px;border-radius: 10px;animation: hideToShow 1s ease-in-out">
-      <div class="card-content2-title">
-        <i class="el-icon-folder-opened card-content2-icon"></i>
-        <span>标签</span>
-      </div>
-
-      <div v-for="(label, index) in labelInfo" :key="index" class="post-sort">
-        <div>
-          <span>{{ label.labelName }}</span>
-        </div>
-      </div>
-
     </div>
 
     <!-- 推荐文章 -->
-    <div style="padding: 25px;border-radius: 10px;margin-top: 40px;animation: hideToShow 1s ease-in-out"
+    <!-- <div style="padding: 25px;border-radius: 10px;margin-top: 40px;animation: hideToShow 1s ease-in-out"
       class="shadow-box background-opacity wow">
       <div class="card-content2-title">
         <i class="el-icon-reading card-content2-icon"></i>
@@ -117,9 +86,9 @@
           <i class="el-icon-date" style="color: orangered"></i>2023-9-23 15:30:20
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <!-- 赞赏   http://119.91.233.250:8001/user/list/   -->
+    <!-- 赞赏 -->
     <div class="shadow-box-mini background-opacity wow admire-box">
       <div style="font-weight: bold;margin-bottom: 20px">🧨赞赏名单</div>
       <div>
@@ -129,13 +98,13 @@
           <div style="display: flex;justify-content: space-between">
             <div style="display: flex">
               <el-avatar style="margin-bottom: 10px" :size="36"
-                src="https://119.91.233.250:12345/down/5x5F7Gc0ep68.jpg"></el-avatar>
+                :src="item.password"></el-avatar>
               <div style="margin-left: 10px;height: 36px;line-height: 36px;overflow: hidden;max-width: 80px">
                 {{ item.name }}
               </div>
             </div>
             <div style="height: 36px;line-height: 36px">
-              {{ item.password }}元
+              {{ item.age }}元
             </div>
           </div>
         </vue-seamless-scroll>
@@ -157,6 +126,7 @@ export default {
   data() {
     return {
       fundList: [],
+      //请求文章的表单
       pagination: {
         current: 1,
         size: 5,
@@ -166,8 +136,11 @@ export default {
       admires: [],
       showAdmireDialog: false,
       articleSearch: "",
-      sortInfo: [],
-      labelInfo: []
+    }
+  },
+  computed: {
+    sortInfo() {
+      return this.$store.state.sortInfo
     }
   },
   mounted() {
@@ -179,27 +152,18 @@ export default {
         console.log('请求失败', err);
       }
     )
-    axios.post('http://fastapi.hejianhui.asia:8889/sort/').then(
-      (res) => {
-        this.sortInfo = res.data
-      },
-      err => {
-        console.log('请求失败', err);
+  },
+  methods: {
+    selectArticle(mode, sortId = 0) {
+      //向 父组件 传事件
+      if (mode == 'search') {
+        this.$emit("selectArticle", this.articleSearch);
+      } else if (mode == 'sort') {
+        this.$emit("selectArticle", "", sortId);
       }
-    )
-    axios.post('http://fastapi.hejianhui.asia:8889/label/').then(
-      (res) => {
-        this.labelInfo = res.data
-      },
-      err => {
-        console.log('请求失败', err);
-      }
-    )
+    },
   }
-
-
 }
-
 </script>
 
 <style scoped>

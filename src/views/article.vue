@@ -113,7 +113,9 @@
                     <!-- 分类 -->
                     <div class="article-sort">
                         <!-- @click="$router.push({ path: '/sort', query: { sortId: article.sortId, labelId: article.labelId } })" -->
-                        <span>{{ article.sort.sortName + " ▶ " + article.label.labelName }}</span>
+                        <span
+                            @click="$router.push({ path: '/sort', query: { sortId: article.sortId, labelId: article.labelId } })">{{
+                                article.sort.sortName + " ▶ " + article.label.labelName }}</span>
                     </div>
                     <!-- 作者信息 -->
                     <blockquote>
@@ -194,23 +196,19 @@ export default {
         async getArticle() {
             await axios({
                 method: 'get',
-                url: `http://fastapi.hejianhui.asia:8889/blog/${this.id}`,
+                // url: `http://fastapi.hejianhui.asia:8889/blog/${this.id}`,
+                url: this.$constant.baseURL+ `/blog/${this.id}`,
             }).then(res => {
                  if (!this.$common.isEmpty(res.data)) {
                     this.article = res.data
-                    
+            
                     const md = new MarkdownIt({breaks: true});
                     this.articleContentHtml = md.render(this.article.articleContent);
-
+                    
                     this.$nextTick(()=>{
                         this.highlight();
                         this.addId();
                     })
-
-                    this.$message({
-                        message: '文章获取成功',
-                        type: "success",
-                    });
                 }
                 
             }), () => {
