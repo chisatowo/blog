@@ -101,6 +101,19 @@
                 </div>
 
             </div>
+            <!-- 文章目录 -->
+
+            <div v-if="!($common.mobile() || mobile)" id="toc-container" class="toc">
+                <strong>🏖️目录</strong>
+                <ol id="toc-list">
+                    <li v-for="(heading, index) in headings" :key="index" style="margin: 2px,0px;">
+                        <a @click="scrollToHeading(heading.id); activeId = index;"
+                            style="user-select: none; cursor: pointer;" :class="{ active: activeId === index }">{{
+                                heading.text
+                            }}</a>
+                    </li>
+                </ol>
+            </div>
             <!-- 文章 -->
             <div style="background: var(--background);">
                 <div class="article-container my-animation-slide-bottom">
@@ -112,7 +125,6 @@
                     </div>
                     <!-- 分类 -->
                     <div class="article-sort">
-                        <!-- @click="$router.push({ path: '/sort', query: { sortId: article.sortId, labelId: article.labelId } })" -->
                         <span
                             @click="$router.push({ path: '/sort', query: { sortId: article.sortId, labelId: article.labelId } })">{{
                                 article.sort.sortName + " ▶ " + article.label.labelName }}</span>
@@ -163,6 +175,7 @@ export default {
 
     data() {
         return {
+            mobile:false,
             id: this.$route.query.id,
             subscribe: false,
             article: {},
@@ -172,15 +185,53 @@ export default {
             newsTime: "",
             showPasswordDialog: false,
             password: "",
-            tips: ""
+            tips: "",
+            headings:[],
+            activeId:null
         };
     },
     created() {
         this.getArticle()
     },
     mounted() {
+        window.addEventListener('scroll', this.handleScroll);
+    },
+    beforeDestroy() {
+        window.removeEventListener('scroll', this.handleScroll);
     },
     methods: {
+        //自动高亮当前标题
+        handleScroll() {
+            console.log('scroll');
+            // const scrollPosition = window.scrollY;
+            // const titleRefs = this.headings.map((_, index) => this.$refs[`title${index + 1}`]);
+            // const activeTitleIndex = titleRefs.findIndex(titleRef => titleRef.offsetTop > scrollPosition) - 1;
+            // this.activeTitle = activeTitleIndex >= 0 ? activeTitleIndex : null;
+        },
+        //点击目录标题跳转到对应标题处
+        scrollToHeading(headingId) {
+            var targetHeading = document.getElementById(headingId);
+            if (targetHeading) {
+                targetHeading.scrollIntoView({
+                    // behavior: "smooth",
+					// block: "start",
+					// inline: "nearest"
+                    // behavior: 'smooth',
+                    // block: 'start', // 'start' aligns the target at the top of the container
+                });
+                window.scrollBy(0, -150);
+            }
+        },
+        //生成目录
+        generateTOC() {
+            var headings = document.querySelectorAll('.entry-content h1, .entry-content h2');
+            this.headings = Array.from(headings).map(function(heading) {
+                return {
+                    text: heading.textContent.slice(0,10),
+                    id: heading.id
+                };
+            });
+        },
         onScrollPage() {
             let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             if (scrollTop < (window.innerHeight / 4)) {
@@ -196,7 +247,6 @@ export default {
         async getArticle() {
             await axios({
                 method: 'get',
-                // url: `http://fastapi.hejianhui.asia:8889/blog/${this.id}`,
                 url: this.$constant.baseURL+ `/blog/${this.id}`,
             }).then(res => {
                  if (!this.$common.isEmpty(res.data)) {
@@ -205,9 +255,11 @@ export default {
                     const md = new MarkdownIt({breaks: true});
                     this.articleContentHtml = md.render(this.article.articleContent);
                     
+                    //DOM更新完后
                     this.$nextTick(()=>{
                         this.highlight();
                         this.addId();
+                        this.generateTOC();
                     })
                 }
                 
@@ -246,7 +298,6 @@ export default {
 
           // 检测语言是否存在，不存在则自动检测
           let language = hljs.getLanguage(lang.toLowerCase());
-          console.log(language,'xxxxxx');
           if (language === undefined) {
             // 启用自动检测
             let autoLanguage = hljs.highlightAuto(preCode.text());
@@ -464,6 +515,51 @@ blockquote {
     .article-info-news {
         right: 20px;
     }
+}
+
+
+
+/* 新增 */
+#toc-container {
+    position: fixed;
+    top: 60px;
+    right: 45px;
+    background-color: #9bc6f0;
+    padding: 10px;
+    border: 1px solid #034588;
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+#toc-container strong {
+    margin-bottom: 10%;
+    margin-right: 20%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+#toc {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#toc a {
+    text-decoration: none;
+    color: #007bff;
+
+}
+
+#toc-list {
+    margin: 0;
+    padding: 2px 0px 2px 25px;
+}
+
+.active {
+    font-weight: bold;
+    color: blue;
+    /* Customize the color as needed */
 }
 </style>
   

@@ -138,6 +138,10 @@ export default {
 					block: "start",
 					inline: "nearest"
 				});
+				setTimeout(() => {
+					window.scrollBy(0, -80);
+				}, 300);
+
 			});
 		},
 	}

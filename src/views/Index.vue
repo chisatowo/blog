@@ -58,6 +58,7 @@
                         fill="#000000"></path>
                 </svg>
             </div>
+            <!-- 占个位不会导致ui变形 -->
             <div class="backTop" v-else>
                 <svg viewBox="0 0 1024 1024" width="50" height="50">
                     <path
@@ -68,7 +69,6 @@
                         fill="#000000"></path>
                 </svg>
             </div>
-
             <el-popover placement="left" :close-delay="500" trigger="hover">
                 <div slot="reference">
                     <i class="fa fa-cog iconRotate" aria-hidden="true"></i>

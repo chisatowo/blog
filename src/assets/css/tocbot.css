@@ -1,9 +1,9 @@
 .toc {
     overflow-y: auto;
-    width: 150px;
+    width: 180px;
     max-height: 300px;
     position: fixed;
-    top: 50vh;
+    top: 20vh;
     right: 50px;
     background: var(--background);
     border-radius: 5px;

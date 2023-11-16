@@ -144,7 +144,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://hejianhui.asia:8001/user/list/').then(
+    axios.get('http://api.hejianhui.asia:8001/user/list/').then(
       (res) => {
         this.fundList = res.data
       },
