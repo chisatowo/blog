@@ -7,7 +7,7 @@
                 class="toolbar-content ">
 
                 <!-- 名称 -->
-                <div class="toolbar-title" style="margin-right:15px;">
+                <div class="toolbar-title " style="margin-right:15px;">
                     <h2 @click="$router.push({ path: '/' })">Cliqin</h2>
                 </div>
 
@@ -20,16 +20,16 @@
                 <!-- 电脑导航栏 -->
                 <div v-else>
                     <ul class="scroll-menu">
-                        <li @click="$router.push({ path: '/' })">
+                        <!-- <li @click="$router.push({ path: '/' })">
                             <div class="my-menu">
                                 🏡 <span>Home</span>
                             </div>
-                        </li>
+                        </li> -->
                         <li v-for="(menu, index) in $store.getters.navigationBar"
                             @click="$router.push({ path: '/sort', query: { sortId: menu.id, labelId: menu.labels[0].id } })"
                             :key="index">
                             <div class="my-menu">
-                                📒 <span>{{ menu.sortName }}</span>
+                                📒 <span>{{ menu.name }}</span>
                             </div>
                         </li>
                         <li @click="$router.push({ path: 'about' })">
@@ -105,7 +105,7 @@
                         @click="smallMenu({ path: '/sort', query: { sortId: menu.id, labelId: menu.labels[0].id } })"
                         :key="index">
                         <div>
-                            📒 <span>{{ menu.sortName }}</span>
+                            📒 <span>{{ menu.name }}</span>
                         </div>
                     </li>
                     <li>
@@ -185,11 +185,11 @@ export default {
     methods: {
         getSortInfo() {
             axios({
-				method: 'post',
-				url: this.$constant.baseURL+ "/sort/",
+				method: 'get',
+				url: this.$constant.baseURL+ "/article/sort/",
 			}).then(res => {
                 if (!this.$common.isEmpty(res.data)) {
-                    this.$store.commit("loadSortInfo", res.data);
+                    this.$store.commit("loadSortInfo", res.data.data);
                 }
 			}).catch((error) => {
 				this.$message({
@@ -276,6 +276,10 @@ export default {
 .toolbar-title {
     margin-left: 30px;
     cursor: pointer;
+}
+
+.toolbar-title :hover {
+    color: orange;
 }
 
 .toolbar-mobile-menu {
@@ -391,12 +395,13 @@ export default {
 .backTop {
     transition: all 0.3s ease-in;
     position: relative;
-    top: 0;
+    bottom: 1vh;
     left: -13px;
 }
 
 .backTop:hover {
-    top: -10px;
+    color: var(--themeBackground);
+    top: -13px;
 }
 
 @media screen and (max-width: 400px) {

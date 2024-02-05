@@ -2,8 +2,8 @@
   <div>
     <!-- 网站信息 -->
     <div class="card-content1 shadow-box background-opacity">
-      <el-avatar style="margin-top: 20px" class="user-avatar" :size="120"
-        src="https://119.91.233.250:12345/down/OVD9RI9yFj5O.png"></el-avatar>
+      <el-avatar style="margin-top: 20px" class="user-avatar" :size="150"
+        src="https://volunteerservice.oss-cn-beijing.aliyuncs.com/services/1701187508IXPI1OHFDYx7c2812d265b541b23a25ce1df536db5cf.png"></el-avatar>
       <div class="web-name">Cliqin</div>
       <div class="web-info">
         <div class="blog-info-box">
@@ -31,7 +31,7 @@
         搜索
       </div>
       <div style="display: flex">
-        <input class="ais-SearchBox-input" v-model="articleSearch" type="text" placeholder="搜索文章" maxlength="32">
+        <input @keyup.enter="selectArticle('search')" class="ais-SearchBox-input" v-model="searchTitle" type="text" placeholder="搜索文章" maxlength="32">
         <div class="ais-SearchBox-submit" @click="selectArticle('search')">
           <svg style="margin-top: 3.5px;margin-left: 18px" viewBox="0 0 1024 1024" width="20" height="20">
             <path
@@ -55,7 +55,7 @@
 
       <div v-for="(sort, index) in sortInfo" :key="index" class="post-sort" @click="selectArticle('sort', sort.id)">
         <div>
-          <span>{{ sort.sortName }}</span>
+          <span>{{ sort.name }}</span>
         </div>
       </div>
     </div>
@@ -98,13 +98,13 @@
           <div style="display: flex;justify-content: space-between">
             <div style="display: flex">
               <el-avatar style="margin-bottom: 10px" :size="36"
-                :src="item.password"></el-avatar>
+                :src="item.avatar"></el-avatar>
               <div style="margin-left: 10px;height: 36px;line-height: 36px;overflow: hidden;max-width: 80px">
                 {{ item.name }}
               </div>
             </div>
             <div style="height: 36px;line-height: 36px">
-              {{ item.age }}元
+              {{ item.amount }}元
             </div>
           </div>
         </vue-seamless-scroll>
@@ -135,7 +135,7 @@ export default {
       recommendArticles: [],
       admires: [],
       showAdmireDialog: false,
-      articleSearch: "",
+      searchTitle: "",
     }
   },
   computed: {
@@ -144,9 +144,9 @@ export default {
     }
   },
   mounted() {
-    axios.get('http://api.hejianhui.asia:8001/user/list/').then(
+    axios.get(this.$constant.baseURL +'/user/fund').then(
       (res) => {
-        this.fundList = res.data
+        this.fundList = res.data.data
       },
       err => {
         console.log('请求失败', err);
@@ -157,7 +157,7 @@ export default {
     selectArticle(mode, sortId = 0) {
       //向 父组件 传事件
       if (mode == 'search') {
-        this.$emit("selectArticle", this.articleSearch);
+        this.$emit("selectArticle", this.searchTitle);
       } else if (mode == 'sort') {
         this.$emit("selectArticle", "", sortId);
       }

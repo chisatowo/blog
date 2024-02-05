@@ -1,9 +1,12 @@
 <template>
   <div class="myFooter-wrap" v-show="showFooter">
     <div class="myFooter">
-      <div class="footer-title">Cliqin's House</div>
-      <div class="icp">本网站由
+      <div class="icp" style="padding-bottom: 0px;">本网站由
         <a href="https://poetize.cn/" target="_blank">Poetize</a> 强力支持
+      </div>
+
+      <div class="icp">© 2023 成长画廊GrowthGallery
+        <a href="http://beian.miit.gov.cn/" target="_blank">粤ICP备2023117589号</a>-1
       </div>
     </div>
   </div>

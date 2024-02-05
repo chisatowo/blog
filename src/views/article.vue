@@ -4,16 +4,16 @@
             <!-- 封面 -->
             <div class="article-head my-animation-slide-top">
                 <!-- 背景图片 -->
-                <el-image class="article-image my-el-image" v-once lazy
-                    :src="!$common.isEmpty(article.articleCover) ? article.articleCover : 'none'" fit="cover">
-                    {{ article.articleCover }}
+                <el-image class="article-image my-el-image" xlazy
+                    :src="!$common.isEmpty(article.cover) ? article.cover : $constant.random_image + new Date() + Math.floor(Math.random() * 10)"
+                    fit="cover">
                     <div slot="error" class="image-slot">
                         <div class="article-image"></div>
                     </div>
                 </el-image>
-                <!-- 文章信息 -->
+
                 <div class="article-info-container">
-                    <div class="article-title">{{ article.articleTitle }}</div>
+                    <div class="article-title">{{ article.title }}</div>
                     <div class="article-info">
                         <svg viewBox="0 0 1024 1024" width="14" height="14" style="vertical-align: -2px;">
                             <path
@@ -34,7 +34,7 @@
                             <path d="M625 282.1m-43.7 0a43.7 43.7 0 1 0 87.4 0 43.7 43.7 0 1 0-87.4 0Z" fill="#FFFFFF">
                             </path>
                         </svg>
-                        <span>&nbsp;{{ article.creator.name }}</span>
+                        <span>&nbsp;{{ article.author.username }}</span>
                         <span>·</span>
                         <svg viewBox="0 0 1024 1024" width="14" height="14" style="vertical-align: -2px;">
                             <path d="M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z" fill="#409EFF"></path>
@@ -45,7 +45,7 @@
                                 d="M725.333333 312.888889H711.111111v28.444444c0 31.288889-25.6 56.888889-56.888889 56.888889s-56.888889-25.6-56.888889-56.888889v-28.444444h-170.666666v28.444444c0 31.288889-25.6 56.888889-56.888889 56.888889s-56.888889-25.6-56.888889-56.888889v-28.444444h-14.222222c-22.755556 0-42.666667 19.911111-42.666667 42.666667v341.333333c0 22.755556 19.911111 42.666667 42.666667 42.666667h426.666666c22.755556 0 42.666667-19.911111 42.666667-42.666667v-341.333333c0-22.755556-19.911111-42.666667-42.666667-42.666667zM426.666667 654.222222h-56.888889c-17.066667 0-28.444444-11.377778-28.444445-28.444444s11.377778-28.444444 28.444445-28.444445h56.888889c17.066667 0 28.444444 11.377778 28.444444 28.444445s-11.377778 28.444444-28.444444 28.444444z m227.555555 0h-56.888889c-17.066667 0-28.444444-11.377778-28.444444-28.444444s11.377778-28.444444 28.444444-28.444445h56.888889c17.066667 0 28.444444 11.377778 28.444445 28.444445s-11.377778 28.444444-28.444445 28.444444z m0-113.777778h-56.888889c-17.066667 0-28.444444-11.377778-28.444444-28.444444s11.377778-28.444444 28.444444-28.444444h56.888889c17.066667 0 28.444444 11.377778 28.444445 28.444444s-11.377778 28.444444-28.444445 28.444444z"
                                 fill="#FFFFFF"></path>
                         </svg>
-                        <span>&nbsp;{{ article.createTime | dateFormat }}</span>
+                        <span>&nbsp;{{ article.createTime }}</span>
                         <span>·</span>
                         <svg viewBox="0 0 1024 1024" width="14" height="14" style="vertical-align: -2px;">
                             <path d="M14.656 512a497.344 497.344 0 1 0 994.688 0 497.344 497.344 0 1 0-994.688 0z"
@@ -86,7 +86,7 @@
                                 d="M959.488 354.645333a99.84 99.84 0 0 0-23.722667-127.488 78.677333 78.677333 0 0 0-142.848-64.170666l-11.605333 20.138666a17.066667 17.066667 0 0 0-20.821333 7.168l-32.085334 55.466667H142.677333a46.250667 46.250667 0 0 0-45.909333 46.08v449.194667a46.08 46.08 0 0 0 45.909333 46.08h236.032v73.386666a17.066667 17.066667 0 0 0 8.362667 14.848 17.066667 17.066667 0 0 0 8.704 2.218667 17.066667 17.066667 0 0 0 8.362667-2.218667l156.672-88.234666h248.32a46.08 46.08 0 0 0 46.08-46.08V398.677333L921.6 283.306667a17.066667 17.066667 0 0 0-4.266667-21.504l1.877334-3.413334a65.365333 65.365333 0 0 1 10.410666 79.189334l-53.077333 91.989333a56.832 56.832 0 0 0 20.821333 77.653333 17.066667 17.066667 0 0 0 24.234667-6.314666 17.066667 17.066667 0 0 0-6.997333-23.04 23.04 23.04 0 0 1-8.362667-31.061334z m-138.410667 386.389334a11.946667 11.946667 0 0 1-11.946666 11.946666H556.202667a17.066667 17.066667 0 0 0-8.362667 2.218667l-134.997333 76.117333v-61.269333a17.066667 17.066667 0 0 0-17.066667-17.066667H142.677333a11.946667 11.946667 0 0 1-11.776-11.946666V291.84a11.946667 11.946667 0 0 1 11.776-11.946667h565.930667L574.464 512a17.066667 17.066667 0 0 0-1.706667 12.970667L597.333333 615.253333H265.898667a17.066667 17.066667 0 1 0 0 34.133334h352.938666a17.066667 17.066667 0 0 0 5.802667 0l102.4-35.328a17.066667 17.066667 0 0 0 9.216-7.509334l85.333333-147.968z m-204.8-184.661334l63.829334 36.864-49.322667 17.066667z m206.848-170.666666v1.365333l-108.373333 186.709333-102.4-59.050666L781.482667 221.866667l102.4 59.050666z m76.458667-161.28L887.466667 244.224l-76.970667-44.373333 11.264-19.797334a44.544 44.544 0 1 1 77.141333 44.544z"
                                 fill="#3D3D63"></path>
                         </svg>
-                        <span>&nbsp;{{ article.commentCount ? article.commentCount : 0 }}</span>
+                        <span>&nbsp;{{ article.commentCount }}</span>
                         <span>·</span>
                         <svg viewBox="0 0 1024 1024" width="14" height="14" style="vertical-align: -2px;">
                             <path
@@ -101,38 +101,33 @@
                 </div>
 
             </div>
-            <!-- 文章目录 -->
 
-            <div v-if="!($common.mobile() || mobile)" id="toc-container" class="toc">
-                <strong>🏖️目录</strong>
-                <ol id="toc-list">
-                    <li v-for="(heading, index) in headings" :key="index" style="margin: 2px,0px;">
-                        <a @click="scrollToHeading(heading.id); activeId = index;"
-                            style="user-select: none; cursor: pointer;" :class="{ active: activeId === index }">{{
-                                heading.text
-                            }}</a>
-                    </li>
-                </ol>
-            </div>
             <!-- 文章 -->
             <div style="background: var(--background);">
                 <div class="article-container my-animation-slide-bottom">
+
+                    <div v-if="!$common.isEmpty(article.videoUrl)" style="margin-bottom: 20px">
+                        <videoPlayer :url="{ src: article.videoUrl }"
+                            :cover="!$common.isEmpty(article.cover) ? article.cover : $constant.random_image + new Date() + Math.floor(Math.random() * 10)">
+                        </videoPlayer>
+                    </div>
+
                     <!-- 文章内容 -->
                     <div v-html="articleContentHtml" class="entry-content"></div>
                     <!-- 最后更新时间 -->
                     <div class="article-update-time">
-                        <span>文章最后更新于 {{ article.updateTime | dateFormat }}</span>
+                        <span>文章最后更新于 {{ article.updateTime }}</span>
                     </div>
                     <!-- 分类 -->
                     <div class="article-sort">
                         <span
-                            @click="$router.push({ path: '/sort', query: { sortId: article.sortId, labelId: article.labelId } })">{{
-                                article.sort.sortName + " ▶ " + article.label.labelName }}</span>
+                            @click="$router.push({ path: '/sort', query: { sortId: article.sort.id, labelId: article.label.id } })">{{
+                                article.sort.name + " ▶ " + article.label.name }}</span>
                     </div>
                     <!-- 作者信息 -->
                     <blockquote>
                         <div>
-                            作者：{{ article.creator.name }}
+                            作者：{{ article.author.username }}
                         </div>
                         <div>
                             版权声明：转载请注明文章出处
@@ -152,7 +147,23 @@
 
                 <div id="toc" class="toc"></div>
             </div>
+            <!-- 文章目录 -->
 
+            <div v-if="!($common.mobile() || mobile)" id="toc-container" class="toc">
+                <strong>🏖️目录</strong>
+                <ol id="toc-list">
+                    <li v-for="(heading, index) in headings" :key="index" style="margin: 2px,0px;">
+                        <a @click="scrollToHeading(heading.id); activeId = index;"
+                            style="user-select: none; cursor: pointer;" :class="{ active: activeId === index }">{{
+                                heading.text
+                            }}
+                        </a>
+                    </li>
+                </ol>
+            </div>
+            <div v-if="!($common.mobile() || mobile)" id="toc-button" @click="clickTocButton()">
+                <i class="fa fa-align-justify" aria-hidden="true"></i>
+            </div>
             <div style="background: var(--background)">
                 <myFooter></myFooter>
             </div>
@@ -166,11 +177,12 @@
 import axios from "axios";
 import MarkdownIt from 'markdown-it';
 const myFooter = () => import("./common/myFooter");
-
+const videoPlayer = () => import("./common/videoPlayer");
 
 export default {
     components: {
         myFooter,
+        videoPlayer
     },
 
     data() {
@@ -199,7 +211,26 @@ export default {
     beforeDestroy() {
         window.removeEventListener('scroll', this.handleScroll);
     },
+    watch: {
+        scrollTop(scrollTop, oldScrollTop) {
+            let isShow = scrollTop - window.innerHeight > 30;
+            if (isShow) {
+                $("#toc-button").css("bottom", "15vh");
+            } else {
+                $("#toc-button").css("bottom", "8vh");
+            }
+        },
+    },
     methods: {
+        //隐藏目录
+        clickTocButton() {
+            let display = $(".toc");
+            if ("none" === display.css("display")) {
+                display.css("display", "unset");
+            } else {
+                display.css("display", "none");
+            }
+        },
         //自动高亮当前标题
         handleScroll() {
             console.log('scroll');
@@ -247,13 +278,13 @@ export default {
         async getArticle() {
             await axios({
                 method: 'get',
-                url: this.$constant.baseURL+ `/blog/${this.id}`,
+                url: this.$constant.baseURL+ `/article/${this.id}`,
             }).then(res => {
-                 if (!this.$common.isEmpty(res.data)) {
-                    this.article = res.data
+                 if (!this.$common.isEmpty(res.data.data)) {
+                    this.article = res.data.data
             
                     const md = new MarkdownIt({breaks: true});
-                    this.articleContentHtml = md.render(this.article.articleContent);
+                    this.articleContentHtml = md.render(this.article.content);
                     
                     //DOM更新完后
                     this.$nextTick(()=>{
@@ -560,6 +591,27 @@ blockquote {
     font-weight: bold;
     color: blue;
     /* Customize the color as needed */
+}
+
+#toc-button {
+    position: fixed;
+    right: 5.5vh;
+    bottom: 15vh;
+    animation: slide-bottom 0.5s ease-in-out both;
+    z-index: 100;
+    cursor: pointer;
+    font-size: 30px;
+    width: 30px;
+}
+
+#toc-button:hover {
+    color: var(--themeBackground);
+}
+
+@media screen and (max-width: 400px) {
+    #toc-button {
+        right: 0.5vh;
+    }
 }
 </style>
   

@@ -9,9 +9,9 @@
       <!-- 标签 -->
       <div class="sort-warp shadow-box" v-if="!$common.isEmpty(sort) && !$common.isEmpty(sort.labels)">
         <div v-for="(label, index) in sort.labels" :key="index"
-          :class="{ isActive: !$common.isEmpty(labelId) && parseInt(labelId) === label.id }" @click="listArticle(label)">
+          :class="{ isActive: !$common.isEmpty(labelId) && parseInt(labelId) === label.id }" @click="listArticle(label.id)">
 
-          <proTag :info="label.labelName" :color="$constant.before_color_list[Math.floor(Math.random() * 6)]"
+          <proTag :info="label.name" :color="$constant.before_color_list[Math.floor(Math.random() * 6)]"
             style="margin: 12px"></proTag>
 
         </div>
@@ -56,10 +56,9 @@ export default {
       labelId: this.$route.query.labelId,
       sort: null,
       pagination: {
-        current: 1,
-        size: 10,
-        total: 0,
-        searchKey: "",
+        page: 1,
+        pageSize: 10,
+        title: "",
         sortId: this.$route.query.sortId,
         labelId: this.$route.query.labelId
       },
@@ -72,10 +71,9 @@ export default {
   watch: {
     $route() {
       this.pagination = {
-        current: 1,
-        size: 10,
-        total: 0,
-        searchKey: "",
+        page: 1,
+        pageSize: 10,
+        title: "",
         sortId: this.$route.query.sortId,
         labelId: this.$route.query.labelId
       };
@@ -112,15 +110,14 @@ export default {
         }
       }
     },
-    listArticle(label) {
-      this.labelId = label.id;
+    listArticle(labelId) {
+      this.labelId = labelId;
       this.pagination = {
-        current: 1,
-        size: 10,
-        total: 0,
-        searchKey: "",
+        page: 1,
+        pageSize: 10,
+        title: "",
         sortId: this.$route.query.sortId,
-        labelId: label.id
+        labelId: labelId
       };
       console.log(this.articles.length);
       //先清空文章(视觉效果而已)
@@ -131,11 +128,11 @@ export default {
     },
     async getArticles() {
       await axios({
-        method: 'post',
-        url: this.$constant.baseURL + "/blog/list",
-        data: this.pagination,
+        method: 'get',
+        url: this.$constant.baseURL + "/article/page",
+        params: this.pagination,
       }).then(res => {
-        this.articles = res.data
+        this.articles = res.data.data.records
       }).catch(() => {
         this.$message({
           message: '文章获取失败',

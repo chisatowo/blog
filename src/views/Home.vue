@@ -77,13 +77,11 @@ export default {
 	data() {
 		return {
 			pagination: {
-				current: 1,
-				size: 10,
-				total: 0,
-				searchKey: "",
-				sortId: 0,
-				labelId: 0,
-				articleSearch: ""
+				page: 1,
+				pageSize: 10,
+				title: "",
+				// sortId: 0,
+				// labelId: 0,
 			},
 			articles: [],
 			fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
@@ -103,16 +101,14 @@ export default {
 		//获取文章
 		async getArticles() {
 			await axios({
-				method: 'post',
+				method: 'get',
 				// url: "http://fastapi.hejianhui.asia:8889/blog/list",
-				url: this.$constant.baseURL + "/blog/list",
-				data: this.pagination,
+				url: this.$constant.baseURL + "/article/page",
+				params: this.pagination,
 			}).then(res => {
 				//仅在第一次进入此判断执行
-				if (this.articles.length == 0) {
-					this.$store.commit("loadTotal", res.data.length);
-				}
-				this.articles = res.data
+				this.$store.commit("loadTotal", res.data.data.total);
+				this.articles = res.data.data.records
 			}).catch(() => {
 				this.$message({
 					message: '文章获取失败',
@@ -120,15 +116,12 @@ export default {
 				});
 			})
 		},
-		async selectArticle(articleSearch = "", sortId = 0) {
+		async selectArticle(title = undefined, sortId = undefined) {
 			this.pagination = {
-				current: 1,
-				size: 10,
-				total: 0,
-				searchKey: "",
+				page: 1,
+				pageSize: 10,
+				title,
 				sortId,
-				labelId: 0,
-				articleSearch
 			}
 			this.articles = [];
 			await this.getArticles();
