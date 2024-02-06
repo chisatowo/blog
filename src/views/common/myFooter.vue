@@ -5,8 +5,11 @@
         <a href="https://poetize.cn/" target="_blank">Poetize</a> 强力支持
       </div>
 
-      <div class="icp">© 2023 成长画廊GrowthGallery
+      <!-- <div class="icp">© 2023 成长画廊GrowthGallery
         <a href="http://beian.miit.gov.cn/" target="_blank">粤ICP备2023117589号</a>-1
+      </div> -->
+      <div class="icp">© 2024 成长走廊GrowthGallery
+        <a href="http://beian.miit.gov.cn/" target="_blank">粤ICP备2023117589号</a>-2
       </div>
     </div>
   </div>
