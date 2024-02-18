@@ -1,4 +1,4 @@
-<link src="https://cdn.bootcdn.net/ajax/libs/animate.css/4.1.1/animate.min.css"></link>
+<link src="https://cdn.bootcdn.net/ajax/libs/animate.css/3.1.1/animate.min.css"></link>
 
 
 export default function () {

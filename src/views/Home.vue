@@ -1,114 +1,146 @@
 <template>
 	<div>
-		<!-- 首页图片  -->
-		<el-image class="background-image" v-once lazy style="animation: 2s ease 0s 1 normal none running header-effect;"
-			:src="url" fit="cover">
-		</el-image>
-		<!-- 首页文字 -->
-		<div class="signature-wall myCenter my-animation-hideToShow">
-			<h1 class="playful">
-				<span>GrowthGallery</span>
-			</h1>
-			<h1 class="playful">
-				<span>成长画廊</span>
-			</h1>
-			<div class="printer">
-				<printer :printerInfo="printerInfo">
-					<template slot="paper">
-						<h3>
-							庐山秀出南斗傍,屏风九叠云锦张<span class="cursor">|</span>
-						</h3>
-					</template>
-				</printer>
-			</div>
-			<div id="bannerWave1"></div>
-			<div id="bannerWave2"></div>
-			<i class="el-icon-arrow-down" @click="navigation('.page-container-wrap')"></i>
-		</div>
-
-		<!-- 首页内容 -->
-		<div class="page-container-wrap">
-			<div class="page-container">
-				<div class="aside-content">
-					<MyAside @selectArticle="selectArticle" />
+		<loader :loading="loading">
+			<!-- 加载页面 -->
+			<template slot="loader">
+				<div>
+					<zombie></zombie>
 				</div>
-				<div class="recent-posts">
-					<div class="announcement background-opacity">
-						<i class="fa fa-volume-up" aria-hidden="true"></i>
-						<div>
-							<div>
-								哈哈哈哈哈哈哈哈哈哈嗝
+			</template>
+
+			<template slot="body">
+				<!-- 首页图片  -->
+				<el-image class="background-image" v-once lazy
+					style="animation: 2s ease 0s 1 normal none running header-effect;" :src="url" fit="cover">
+				</el-image>
+				<!-- 首页文字 -->
+				<div class="signature-wall myCenter my-animation-hideToShow">
+					<h1 class="playful">
+						<span>GrowthGallery</span>
+					</h1>
+					<h1 class="playful">
+						<span>成长画廊</span>
+					</h1>
+					<div class="printer" @click="getGuShi()">
+						<printer :printerInfo="printerInfo">
+							<template slot="paper" slot-scope="scope">
+								<h3>
+									{{ scope.content }}<span class="cursor">|</span>
+								</h3>
+							</template>
+						</printer>
+					</div>
+					<div id="bannerWave1"></div>
+					<div id="bannerWave2"></div>
+					<i class="el-icon-arrow-down" @click="navigation()"></i>
+				</div>
+
+				<!-- 首页内容 -->
+				<div class="page-container-wrap">
+					<div class="page-container">
+						<div class="aside-content">
+							<myAside @selectArticle="selectArticle" />
+						</div>
+						<div class="recent-posts">
+							<div class="announcement background-opacity">
+								<i class="fa fa-volume-up" aria-hidden="true"></i>
+								<div>
+									<div>
+										哈哈哈哈哈哈哈哈哈哈嗝
+									</div>
+								</div>
+							</div>
+
+							<articleList :articleList="articles"></articleList>
+							<div class="pagination-wrap">
+								<div @click="pageArticles()" v-if="pagination.total !== articles.length" class="pagination">
+									下一页
+								</div>
+								<div v-else style="user-select: none">
+									~~到底啦~~
+								</div>
 							</div>
 						</div>
 					</div>
-					<!-- :articleList="articles" -->
 
-					<articleList :articleList="articles"></articleList>
-					<div class="pagination-wrap">
-						<!-- <div @click="pageArticles()" class="pagination">
-							下一页
-						</div> -->
-						<div style="user-select: none">
-							~~到底啦~~
-						</div>
-					</div>
 				</div>
-			</div>
 
-		</div>
+				<!-- 页脚 -->
+				<div style="background: #375370;">
+					<myFooter></myFooter>
+				</div>
 
-		<!-- 页脚 -->
-		<div style="background: #375370;">
-			<myFooter></myFooter>
-		</div>
 
+			</template>
+		</loader>
 	</div>
 </template>
   
 <script>
-//import mousedown from '../utils/mousedown';
-import MyAside from "./myAside.vue";
+import myAside from "./myAside.vue";
+import zombie from "./common/zombie.vue";
+import loader from "./common/loader.vue";
 import printer from "./common/printer.vue";
 import articleList from "./articleList.vue"
 import myFooter from "./common/myFooter.vue"
 import axios from "axios";
 
 export default {
+	components: {
+		zombie,
+		loader,
+		myAside,
+		printer,
+		articleList,
+		myFooter
+	},
 	data() {
 		return {
 			pagination: {
 				page: 1,
-				pageSize: 10,
+				pageSize: 5,
 				title: "",
 				// sortId: 0,
 				// labelId: 0,
+			},
+			loading: false,
+			printerInfo: "你看对面的青山多漂亮",
+			guShi: {
+				"content": "",
+				"origin": "",
+				"author": "",
+				"category": ""
 			},
 			articles: [],
 			fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
 			url: 'https://images.unsplash.com/photo-1695018128519-bced2bac1b71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA==&auto=format&fit=crop&w=2070&q=80'
 		};
 	},
-	components: {
-		MyAside,
-		printer,
-		articleList,
-		myFooter
-	},
 	created() {
-		this.getArticles();
+		this.getGuShi();
+		this.getArticles(true);
 	},
 	methods: {
+		pageArticles() {
+			this.pagination.page = this.pagination.page + 1;
+			this.getArticles();
+		},
 		//获取文章
-		async getArticles() {
+		async getArticles(firstTime = false) {
 			await axios({
 				method: 'get',
-				// url: "http://fastapi.hejianhui.asia:8889/blog/list",
 				url: this.$constant.baseURL + "/article/page",
 				params: this.pagination,
 			}).then(res => {
-				//仅在第一次进入此判断执行
-				this.$store.commit("loadTotal", res.data.data.total);
-				this.articles = res.data.data.records
+				if (!this.$common.isEmpty(res.data)) {
+					this.articles = this.articles.concat(res.data.data.records);
+					this.pagination.total = res.data.data.total;
+					if (firstTime) {
+						//仅在第一次进入此判断执行,更新全局total
+						this.$store.commit("loadTotal", res.data.data.total);
+					}
+				}
+
 			}).catch(() => {
 				this.$message({
 					message: '文章获取失败',
@@ -117,24 +149,40 @@ export default {
 			})
 		},
 		async selectArticle(title = undefined, sortId = undefined) {
-			this.pagination = {
-				page: 1,
-				pageSize: 10,
-				title,
-				sortId,
-			}
+			// Spread操作符：在ES6中引入了Spread操作符（...），可以用来展开对象，将对象的属性和方法展开到另一个对象中。
+			this.pagination = { ...this.pagination, page: 1, title, sortId }
 			this.articles = [];
 			await this.getArticles();
 			this.$nextTick(() => {
-				document.querySelector('.recent-posts').scrollIntoView({
-					behavior: "smooth",
-					block: "start",
-					inline: "nearest"
-				});
-				setTimeout(() => {
-					window.scrollBy(0, -80);
-				}, 300);
+				this.navigation()
+				// document.querySelector('.recent-posts').scrollIntoView({
+				// 	behavior: "smooth",
+				// 	block: "start",
+				// 	inline: "nearest"
+				// });
+				// setTimeout(() => {
+				// 	window.scrollBy(0, -80);
+				// }, 300);
 
+			});
+		},
+		getGuShi() {
+			let that = this;
+			let xhr = new XMLHttpRequest();
+			xhr.open('get', this.$constant.jinrishici);
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4) {
+					that.guShi = JSON.parse(xhr.responseText);
+					that.printerInfo = that.guShi.content;
+				}
+			};
+			xhr.send();
+		},
+		navigation(selector='.page-container-wrap') {
+			let pageId = document.querySelector(selector);
+			window.scrollTo({
+				top: pageId.offsetTop,
+				behavior: "smooth"
 			});
 		},
 	}

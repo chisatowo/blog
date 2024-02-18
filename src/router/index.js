@@ -27,6 +27,10 @@ export default new VueRouter({
 					path: "/article",
 					name: "article",
 					component: () => import('../views/article')
+				},
+				{
+					path: '/footprint',
+					component: () => import('../views/footprint'),
 				}
 			]
 		},

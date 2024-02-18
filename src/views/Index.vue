@@ -29,12 +29,12 @@
                             @click="$router.push({ path: '/sort', query: { sortId: menu.id, labelId: menu.labels[0].id } })"
                             :key="index">
                             <div class="my-menu">
-                                📒 <span>{{ menu.name }}</span>
+                                {{ bookEmoji[index % bookEmoji.length] }} <span>{{ menu.name }}</span>
                             </div>
                         </li>
-                        <li @click="$router.push({ path: 'about' })">
+                        <li @click="$router.push({ path: 'footprint' })">
                             <div class="my-menu">
-                                💃 <span>关于</span>
+                                👣 <span>足迹</span>
                             </div>
                         </li>
                     </ul>
@@ -80,16 +80,16 @@
                         <!-- 月亮按钮 -->
                         <i v-else class="fa fa-moon-o" aria-hidden="true" @click="changeColor()"></i>
                     </div>
-                    <div>
+                    <!-- <div>
                         <i class="fa fa-snowflake-o" aria-hidden="true" @click="changeMouseAnimation()"></i>
-                    </div>
+                    </div> -->
                 </div>
             </el-popover>
         </div>
 
         <!-- 点击动画 -->
-        <canvas v-if="mouseAnimation" id="mousedown" style="position:fixed;left:0;top:0;pointer-events:none;z-index: 1000">
-        </canvas>
+        <!-- <canvas v-if="mouseAnimation" id="mousedown" style="position:fixed;left:0;top:0;pointer-events:none;z-index: 1000">
+        </canvas> -->
 
         <!-- 手机导航栏 -->
         <el-drawer :visible.sync="toolbarDrawer" :show-close="false" size="65%" custom-class="toolbarDrawer" title="欢迎光临"
@@ -108,9 +108,9 @@
                             📒 <span>{{ menu.name }}</span>
                         </div>
                     </li>
-                    <li>
+                    <li @click="smallMenu({ path: '/footprint' })">
                         <div>
-                            🐟 <span>关于</span>
+                            👣 <span>足迹</span>
                         </div>
                     </li>
                 </ul>
@@ -123,15 +123,15 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 <script>
-//import mousedown from '../utils/mousedown';
 import axios from "axios";
 export default {
     data() {
         return {
+            bookEmoji:["📓","📙","📘","📒","📗","📕","📔"],
             hoverEnter: false,
             scrollTop: 0,
             toolButton: false,
-            mouseAnimation: false,
+            // mouseAnimation: false,
             isDark: false,
             scrollTop: 0,
             toolbarDrawer: false,
@@ -139,9 +139,9 @@ export default {
         }
     },
     mounted() {
-        if (this.mouseAnimation) {
-            mousedown();
-        }
+        // if (this.mouseAnimation) {
+        //     mousedown();
+        // }
         //绑定鼠标滚轮监听
         window.addEventListener("scroll", this.onScrollPage);
     },
@@ -235,14 +235,14 @@ export default {
             root.style.setProperty("--favoriteBg", "#f7f9fe");
             }
         },
-        changeMouseAnimation() {
-            this.mouseAnimation = !this.mouseAnimation;
-            if (this.mouseAnimation) {
-            this.$nextTick(() => {
-                mousedown();
-            });
-            }
-        }
+        // changeMouseAnimation() {
+        //     this.mouseAnimation = !this.mouseAnimation;
+        //     if (this.mouseAnimation) {
+        //     this.$nextTick(() => {
+        //         mousedown();
+        //     });
+        //     }
+        // }
     }
 }
 

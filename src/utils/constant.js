@@ -3,10 +3,11 @@ export default {
   imBaseURL: "http://localhost:81",
   webURL: "http://localhost",
 
-  baseURL: "https://fastapi.hejianhui.asia/blog/",
+  baseURL: "https://api.hejianhui.online/blog",
   // imBaseURL: "https://poetize.cn/im",
   // webURL: "https://poetize.cn",
 
+  avatar: "https://volunteerservice.oss-cn-beijing.aliyuncs.com/services/1701187508IXPI1OHFDYx7c2812d265b541b23a25ce1df536db5cf.png",
   live2d_path: "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/",
   cdnPath: "https://cdn.jsdelivr.net/gh/fghrsh/live2d_api/",
   waifuPath: "/webInfo/getWaifuJson",

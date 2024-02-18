@@ -12,7 +12,7 @@
         <a href="http://beian.miit.gov.cn/" target="_blank">粤ICP备2023117589号</a>-2
       </div>
     </div>
-  </div>
+  </div> 
 </template>
 
 <script>

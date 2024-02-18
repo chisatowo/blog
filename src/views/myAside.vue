@@ -8,18 +8,18 @@
       <div class="web-info">
         <div class="blog-info-box">
           <span>文章</span>
-          <span class="blog-info-num">{{$store.state.total}}</span>
+          <span class="blog-info-num">{{ $store.state.total }}</span>
         </div>
         <div class="blog-info-box">
           <span>分类</span>
-          <span class="blog-info-num">{{sortInfo.length}}</span>
+          <span class="blog-info-num">{{ sortInfo.length }}</span>
         </div>
         <div class="blog-info-box">
           <span>访问量</span>
           <span class="blog-info-num">π</span>
         </div>
       </div>
-      <a class="collection-btn">
+      <a class="collection-btn" @click="$router.push({path: '/footprint'})">
         <i class="el-icon-star-off" style="margin-right: 2px"></i>朋友圈
       </a>
     </div>
@@ -31,9 +31,11 @@
         搜索
       </div>
       <div style="display: flex">
-        <input @keyup.enter="selectArticle('search')" class="ais-SearchBox-input" v-model="searchTitle" type="text" placeholder="搜索文章" maxlength="32">
+        <input @keyup.enter="selectArticle('search')" class="ais-SearchBox-input" v-model="searchTitle" type="text"
+          placeholder="搜索文章" maxlength="32">
         <div class="ais-SearchBox-submit" @click="selectArticle('search')">
-          <svg style="margin-top: 3.5px;margin-left: 18px" viewBox="0 0 1024 1024" width="20" height="20">
+          <svg v-if="searchTitle.length" style="margin-top: 3.5px;margin-left: 18px" viewBox="0 0 1024 1024" width="20"
+            height="20">
             <path
               d="M51.2 508.8c0 256.8 208 464.8 464.8 464.8s464.8-208 464.8-464.8-208-464.8-464.8-464.8-464.8 208-464.8 464.8z"
               fill="#51C492"></path>
@@ -41,7 +43,15 @@
               d="M772.8 718.4c48-58.4 76.8-132.8 76.8-213.6 0-186.4-151.2-337.6-337.6-337.6-186.4 0-337.6 151.2-337.6 337.6 0 186.4 151.2 337.6 337.6 337.6 81.6 0 156-28.8 213.6-76.8L856 896l47.2-47.2-130.4-130.4zM512 776c-149.6 0-270.4-121.6-270.4-271.2S363.2 233.6 512 233.6c149.6 0 271.2 121.6 271.2 271.2C782.4 654.4 660.8 776 512 776z"
               fill="#FFFFFF"></path>
           </svg>
+
+          <svg v-else style="margin-top: 3.5px;margin-left: 18px" viewBox="0 0 1024 1024" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" p-id="9723" width="20" height="20">
+            <path
+            d="M215.209 158.769L107.722 534.974A304.633 304.633 0 0 0 96 618.667V864c0 17.673 14.327 32 32 32 17.673 0 32-14.327 32-32V636.211h192V864c0 17.673 14.327 32 32 32 17.673 0 32-14.327 32-32V620.993c0-29.849-4.16-59.553-12.36-88.254l-106.848-373.97C291.588 140.556 274.941 128 256 128c-18.941 0-35.588 12.556-40.791 30.769zM352 576H160l96-336 96 336zM640 832h-96V160c0-17.673-14.327-32-32-32-17.673 0-32 14.327-32 32v672c0 35.346 28.654 64 64 64h96c17.673 0 32-14.327 32-32 0-17.673-14.327-32-32-32zM896 832h-96V160c0-17.673-14.327-32-32-32-17.673 0-32 14.327-32 32v672c0 35.346 28.654 64 64 64h96c17.673 0 32-14.327 32-32 0-17.673-14.327-32-32-32z"
+            p-id="15210" fill="#1296db"></path>
+          </svg>
         </div>
+
       </div>
     </div>
 
@@ -97,8 +107,7 @@
           style="height: 200px;overflow: hidden">
           <div style="display: flex;justify-content: space-between">
             <div style="display: flex">
-              <el-avatar style="margin-bottom: 10px" :size="36"
-                :src="item.avatar"></el-avatar>
+              <el-avatar style="margin-bottom: 10px" :size="36" :src="item.avatar"></el-avatar>
               <div style="margin-left: 10px;height: 36px;line-height: 36px;overflow: hidden;max-width: 80px">
                 {{ item.name }}
               </div>
@@ -144,7 +153,7 @@ export default {
     }
   },
   mounted() {
-    axios.get(this.$constant.baseURL +'/user/fund').then(
+    axios.get(this.$constant.baseURL + '/user/fund').then(
       (res) => {
         this.fundList = res.data.data
       },
@@ -384,5 +393,4 @@ export default {
   border-radius: 0 40px 40px 0;
   background: var(--white);
   cursor: pointer;
-}
-</style>
+}</style>

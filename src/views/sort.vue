@@ -9,7 +9,8 @@
       <!-- 标签 -->
       <div class="sort-warp shadow-box" v-if="!$common.isEmpty(sort) && !$common.isEmpty(sort.labels)">
         <div v-for="(label, index) in sort.labels" :key="index"
-          :class="{ isActive: !$common.isEmpty(labelId) && parseInt(labelId) === label.id }" @click="listArticle(label.id)">
+          :class="{ isActive: !$common.isEmpty(labelId) && parseInt(labelId) === label.id }"
+          @click="listArticle(label.id)">
 
           <proTag :info="label.name" :color="$constant.before_color_list[Math.floor(Math.random() * 6)]"
             style="margin: 12px"></proTag>
@@ -21,11 +22,10 @@
       <div class="article-wrap">
         <articleList :articleList="articles"></articleList>
         <div class="pagination-wrap">
-          <!-- <div @click="pageArticles()" v-if="pagination.total !== articles.length" class="pagination">
+          <div @click="pageArticles()" v-if="pagination.total !== articles.length" class="pagination">
             下一页
-          </div> -->
-          <!-- v-else -->
-          <div style="user-select: none">
+          </div>
+          <div v-else style="user-select: none">
             ~~到底啦~~
           </div>
         </div>
@@ -57,7 +57,7 @@ export default {
       sort: null,
       pagination: {
         page: 1,
-        pageSize: 10,
+        pageSize: 5,
         title: "",
         sortId: this.$route.query.sortId,
         labelId: this.$route.query.labelId
@@ -72,7 +72,7 @@ export default {
     $route() {
       this.pagination = {
         page: 1,
-        pageSize: 10,
+        pageSize: 5,
         title: "",
         sortId: this.$route.query.sortId,
         labelId: this.$route.query.labelId
@@ -86,6 +86,7 @@ export default {
   },
 
   created() {
+    console.log("create");
     this.getSort();
     this.getArticles();
   },
@@ -96,7 +97,7 @@ export default {
   methods: {
     //下一页
     pageArticles() {
-      this.pagination.current = this.pagination.current + 1;
+      this.pagination.page = this.pagination.page + 1;
       this.getArticles();
     },
     getSort() {
@@ -112,16 +113,9 @@ export default {
     },
     listArticle(labelId) {
       this.labelId = labelId;
-      this.pagination = {
-        page: 1,
-        pageSize: 10,
-        title: "",
-        sortId: this.$route.query.sortId,
-        labelId: labelId
-      };
-      console.log(this.articles.length);
+      this.pagination = { ...this.pagination, page: 1, labelId, sortId: this.$route.query.sortId, }
       //先清空文章(视觉效果而已)
-      this.articles.splice(0, this.articles.length);
+      this.articles = [];
       this.$nextTick(() => {
         this.getArticles();
       });
@@ -132,7 +126,10 @@ export default {
         url: this.$constant.baseURL + "/article/page",
         params: this.pagination,
       }).then(res => {
-        this.articles = res.data.data.records
+        if (!this.$common.isEmpty(res.data)) {
+          this.articles = this.articles.concat(res.data.data.records);
+          this.pagination.total = res.data.data.total;
+        }
       }).catch(() => {
         this.$message({
           message: '文章获取失败',
